@@ -1,0 +1,162 @@
+@use "../../scss/" as *;
+
+.continue-watching-section {
+  margin-bottom: 3rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, rgba($main-color, 0.15), rgba($body-bg, 0.5));
+  border-radius: 12px;
+  border: 2px solid rgba($main-color, 0.3);
+
+  .section__header {
+    margin-bottom: 2rem;
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      i {
+        font-size: 2.5rem;
+        color: $main-color;
+      }
+
+      h2 {
+        color: $white;
+        font-size: 2rem;
+        margin: 0;
+
+        @include mobile {
+          font-size: 1.5rem;
+        }
+      }
+    }
+  }
+
+  .continue-watching-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+
+    @include mobile {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+
+  .continue-watching-item {
+    background-color: rgba($body-bg, 0.6);
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+
+    &:hover {
+      transform: translateY(-5px);
+      border-color: $main-color;
+      box-shadow: 0 8px 24px rgba($main-color, 0.3);
+
+      .play-overlay {
+        opacity: 1;
+      }
+
+      .thumbnail-wrapper img {
+        transform: scale(1.05);
+      }
+    }
+
+    .thumbnail-wrapper {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 16/9;
+      background-color: rgba($black, 0.5);
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+      }
+
+      .play-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba($black, 0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+
+        i {
+          font-size: 4rem;
+          color: $white;
+          animation: pulse 2s ease-in-out infinite;
+        }
+      }
+
+      .progress-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background-color: rgba($white, 0.3);
+
+        .progress-fill {
+          height: 100%;
+          background-color: $main-color;
+          transition: width 0.3s ease;
+        }
+      }
+    }
+
+    .item-info {
+      padding: 1.5rem;
+
+      .item-title {
+        color: $white;
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .item-meta {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: $txt-color;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+
+        .separator {
+          color: rgba($white, 0.3);
+        }
+      }
+
+      .progress-text {
+        color: $main-color;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin: 0;
+      }
+    }
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
+}
+

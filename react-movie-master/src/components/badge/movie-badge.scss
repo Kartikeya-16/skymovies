@@ -1,0 +1,91 @@
+@use "../../scss/" as *;
+
+.movie-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+
+  i {
+    font-size: 1rem;
+  }
+
+  .badge-text {
+    line-height: 1;
+  }
+
+  // Theatre badge (red/orange)
+  &.theatre {
+    background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+    color: $white;
+    box-shadow: 0 2px 8px rgba(#ff6b6b, 0.3);
+  }
+
+  // Online/Streaming badge (blue/cyan)
+  &.online {
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    color: $white;
+    box-shadow: 0 2px 8px rgba(#4facfe, 0.3);
+  }
+
+  // New badge (green)
+  &.new {
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+    color: $white;
+    box-shadow: 0 2px 8px rgba(#11998e, 0.3);
+  }
+
+  // Trending badge (purple/pink)
+  &.trending {
+    background: linear-gradient(135deg, #a8edea, #fed6e3);
+    color: #333;
+    box-shadow: 0 2px 8px rgba(#a8edea, 0.3);
+  }
+
+  // HD badge (gold)
+  &.hd {
+    background: linear-gradient(135deg, #f7971e, #ffd200);
+    color: #333;
+    box-shadow: 0 2px 8px rgba(#f7971e, 0.3);
+  }
+
+  // 4K badge (platinum)
+  &.\34 k { // Escaping for 4k class
+    background: linear-gradient(135deg, #bdc3c7, #ecf0f1);
+    color: #333;
+    box-shadow: 0 2px 8px rgba(#bdc3c7, 0.3);
+    font-weight: 900;
+  }
+
+  // Hover effect
+  &:hover {
+    transform: scale(1.05);
+  }
+
+  // Small variant
+  &.small {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.65rem;
+
+    i {
+      font-size: 0.85rem;
+    }
+  }
+
+  // Large variant
+  &.large {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+
+    i {
+      font-size: 1.2rem;
+    }
+  }
+}
+

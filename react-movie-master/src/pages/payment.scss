@@ -1,0 +1,206 @@
+@use "../scss/" as *;
+
+.payment-page {
+  padding: 2rem 0;
+}
+
+.payment-container {
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.booking-summary-card {
+  background-color: rgba($body-bg, 0.5);
+  padding: 2rem;
+  border-radius: 12px;
+  border: 2px solid rgba($main-color, 0.3);
+  height: fit-content;
+
+  h2 {
+    color: $main-color;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+  }
+
+  .summary-details {
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.8rem 0;
+      border-bottom: 1px solid rgba($white, 0.1);
+
+      &.total {
+        border-bottom: none;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 2px solid $main-color;
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: $main-color;
+      }
+
+      span:first-child {
+        color: $txt-color;
+      }
+
+      span:last-child {
+        color: $white;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+.payment-methods {
+  background-color: rgba($body-bg, 0.5);
+  padding: 2rem;
+  border-radius: 12px;
+  border: 2px solid rgba($main-color, 0.3);
+
+  h2 {
+    color: $main-color;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+  }
+}
+
+.payment-options {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+
+  .payment-option {
+    flex: 1;
+    cursor: pointer;
+    position: relative;
+
+    input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+    }
+
+    .option-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1.5rem;
+      border: 2px solid rgba($white, 0.3);
+      border-radius: 8px;
+      background-color: transparent;
+      transition: all 0.3s ease;
+
+      i {
+        font-size: 2rem;
+        color: $white;
+      }
+
+      span {
+        font-size: 0.9rem;
+        color: $white;
+      }
+    }
+
+    &.selected .option-content {
+      border-color: $main-color;
+      background-color: rgba($main-color, 0.1);
+
+      i, span {
+        color: $main-color;
+      }
+    }
+
+    &:hover .option-content {
+      border-color: $main-color;
+    }
+  }
+}
+
+.payment-form {
+  .form-group {
+    margin-bottom: 1.5rem;
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: $white;
+      font-weight: 500;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      background-color: rgba($black, 0.3);
+      border: 2px solid rgba($white, 0.2);
+      border-radius: 8px;
+      color: $white;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+
+      &:focus {
+        outline: none;
+        border-color: $main-color;
+      }
+
+      &::placeholder {
+        color: $txt-color;
+      }
+    }
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .wallet-options {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+
+    .wallet-btn {
+      padding: 1rem;
+      background-color: rgba($white, 0.1);
+      border: 2px solid rgba($white, 0.2);
+      border-radius: 8px;
+      color: $white;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        border-color: $main-color;
+        background-color: rgba($main-color, 0.1);
+      }
+    }
+  }
+
+  .btn-pay {
+    width: 100%;
+    padding: 1.2rem;
+    background-color: $main-color;
+    color: $white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+
+    &:hover {
+      background-color: darken($main-color, 10%);
+      transform: translateY(-2px);
+    }
+  }
+}
+

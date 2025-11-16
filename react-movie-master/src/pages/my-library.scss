@@ -1,0 +1,209 @@
+@use "../scss/" as *;
+
+.my-library-page {
+  padding: 2rem 0;
+}
+
+.library-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+
+  .tab-btn {
+    padding: 1rem 2rem;
+    background-color: rgba($body-bg, 0.5);
+    border: 2px solid rgba($white, 0.2);
+    color: $white;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+
+    i {
+      font-size: 1.3rem;
+    }
+
+    &:hover {
+      border-color: $main-color;
+    }
+
+    &.active {
+      background-color: $main-color;
+      border-color: $main-color;
+    }
+  }
+}
+
+.movies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.no-movies {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 4rem 2rem;
+  background-color: rgba($body-bg, 0.5);
+  border-radius: 12px;
+
+  i {
+    font-size: 4rem;
+    color: $txt-color;
+    margin-bottom: 1rem;
+  }
+
+  h3 {
+    font-size: 1.8rem;
+    color: $white;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    color: $txt-color;
+  }
+}
+
+.movie-card {
+  background-color: rgba($body-bg, 0.5);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 24px rgba($main-color, 0.3);
+  }
+
+  .movie-poster {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 2/3;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(to top, rgba($black, 0.9), transparent);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 1rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    &:hover {
+      img {
+        transform: scale(1.1);
+      }
+
+      .overlay {
+        opacity: 1;
+      }
+    }
+
+    .play-btn,
+    .remove-btn {
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.3s ease;
+
+      i {
+        font-size: 1.5rem;
+      }
+    }
+
+    .play-btn {
+      background-color: $main-color;
+      color: $white;
+
+      &:hover {
+        background-color: darken($main-color, 10%);
+        transform: scale(1.05);
+      }
+    }
+
+    .remove-btn {
+      background-color: #f44336;
+      color: $white;
+
+      &:hover {
+        background-color: darken(#f44336, 10%);
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  .movie-info {
+    padding: 1.5rem;
+
+    .movie-title {
+      font-size: 1.2rem;
+      color: $white;
+      margin-bottom: 0.8rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .movie-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+
+      .rating {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        color: $main-color;
+        font-weight: 600;
+
+        i {
+          font-size: 1.1rem;
+        }
+      }
+
+      .duration {
+        color: $txt-color;
+      }
+    }
+
+    .movie-date {
+      color: $txt-color;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+@include mobile {
+  .movies-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+  }
+
+  .library-tabs {
+    flex-direction: column;
+  }
+}
+

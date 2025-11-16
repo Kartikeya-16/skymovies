@@ -1,0 +1,111 @@
+@use "../scss/" as *;
+
+.theatre-movies-page {
+  .search-section {
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .section-subtitle {
+    color: $txt-color;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+  }
+}
+
+.movie-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid rgba($white, 0.1);
+  overflow-x: auto;
+
+  &::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba($white, 0.05);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba($main-color, 0.5);
+    border-radius: 10px;
+
+    &:hover {
+      background: $main-color;
+    }
+  }
+
+  .tab-btn {
+    padding: 1rem 2rem;
+    background-color: transparent;
+    border: none;
+    color: $txt-color;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+
+    i {
+      font-size: 1.3rem;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 3px;
+      background: linear-gradient(90deg, $main-color 0%, darken($main-color, 10%) 100%);
+      transition: width 0.3s ease;
+      border-radius: 3px 3px 0 0;
+    }
+
+    &:hover {
+      color: $main-color;
+      transform: translateY(-2px);
+    }
+
+    &.active {
+      color: $main-color;
+
+      &::after {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.all-movies-section {
+  .section {
+    margin-bottom: 3rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+@include mobile {
+  .movie-tabs {
+    gap: 0.5rem;
+
+    .tab-btn {
+      padding: 0.8rem 1.2rem;
+      font-size: 0.95rem;
+
+      i {
+        font-size: 1.1rem;
+      }
+    }
+  }
+}
+

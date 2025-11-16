@@ -1,0 +1,91 @@
+@use "../scss/" as *;
+
+.privacy-page {
+  padding: 3rem 0;
+  min-height: 60vh;
+}
+
+.privacy-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.privacy-section {
+  margin-bottom: 2.5rem;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  p {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 1rem;
+
+    a {
+      color: $main-color;
+      text-decoration: none;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: lighten($main-color, 10%);
+        text-decoration: underline;
+      }
+    }
+  }
+
+  ul {
+    list-style: none;
+    padding-left: 1.5rem;
+    margin: 1rem 0;
+
+    li {
+      position: relative;
+      padding-left: 1.5rem;
+      margin-bottom: 0.75rem;
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.6;
+
+      &:before {
+        content: "•";
+        position: absolute;
+        left: 0;
+        color: $main-color;
+        font-weight: bold;
+        font-size: 1.2rem;
+      }
+    }
+  }
+}
+
+.privacy-footer {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+
+  p {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+}
+
+@include mobile {
+  .privacy-section {
+    padding: 1.5rem;
+
+    h2 {
+      font-size: 1.25rem;
+    }
+  }
+}
+

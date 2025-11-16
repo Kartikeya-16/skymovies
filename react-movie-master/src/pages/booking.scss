@@ -1,0 +1,97 @@
+@use "../scss/" as *;
+
+.booking-page {
+  padding: 2rem 0;
+}
+
+.booking-section {
+  margin-bottom: 3rem;
+
+  &__title {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: $main-color;
+  }
+}
+
+.theatre-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.theatre-card {
+  background-color: $body-bg;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: $main-color;
+    transform: translateY(-5px);
+  }
+
+  &.selected {
+    border-color: $main-color;
+    background-color: rgba($main-color, 0.1);
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: $white;
+  }
+
+  .theatre-location {
+    color: $txt-color;
+    font-size: 1rem;
+  }
+}
+
+.showtime-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.showtime-btn {
+  padding: 1rem 2rem;
+  border: 2px solid $white;
+  background-color: transparent;
+  color: $white;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: $main-color;
+    color: $main-color;
+  }
+
+  &.selected {
+    background-color: $main-color;
+    border-color: $main-color;
+    color: $white;
+  }
+}
+
+.btn-proceed {
+  padding: 1.2rem 3rem;
+  background-color: $main-color;
+  color: $white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: darken($main-color, 10%);
+    transform: translateY(-2px);
+  }
+}
+

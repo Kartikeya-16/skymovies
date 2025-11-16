@@ -1,0 +1,193 @@
+@use "../scss/" as *;
+
+.confirmation-page {
+  padding: 2rem 0;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.success-icon {
+  margin-bottom: 1rem;
+
+  i {
+    font-size: 6rem;
+    color: #4caf50;
+    animation: scaleIn 0.5s ease;
+  }
+}
+
+@keyframes scaleIn {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.success-message {
+  font-size: 2.5rem;
+  color: $main-color;
+  margin-bottom: 0.5rem;
+}
+
+.success-subtitle {
+  color: $txt-color;
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.confirmation-card {
+  background-color: rgba($body-bg, 0.5);
+  border: 2px solid rgba($main-color, 0.3);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.qr-section {
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid rgba($white, 0.1);
+
+  .qr-code {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+    display: block;
+    border: 4px solid $main-color;
+    border-radius: 8px;
+  }
+
+  .qr-instruction {
+    margin-top: 1rem;
+    color: $txt-color;
+    font-size: 1rem;
+  }
+}
+
+.booking-details {
+  text-align: left;
+
+  h2 {
+    color: $main-color;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .detail-group {
+    .detail-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.8rem 0;
+      border-bottom: 1px solid rgba($white, 0.1);
+
+      .label {
+        color: $txt-color;
+        font-weight: 500;
+      }
+
+      .value {
+        color: $white;
+        font-weight: 600;
+      }
+
+      &.total {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 2px solid $main-color;
+        border-bottom: none;
+        font-size: 1.3rem;
+
+        .label,
+        .value {
+          color: $main-color;
+        }
+      }
+    }
+  }
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+
+  button {
+    padding: 1rem 2rem;
+    border: 2px solid $main-color;
+    background-color: transparent;
+    color: $main-color;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+
+    i {
+      font-size: 1.2rem;
+    }
+
+    &:hover {
+      background-color: $main-color;
+      color: $white;
+      transform: translateY(-2px);
+    }
+  }
+
+  @include mobile {
+    flex-direction: column;
+
+    button {
+      justify-content: center;
+    }
+  }
+}
+
+.navigation-links {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+
+  .link-btn {
+    padding: 1rem 2rem;
+    background-color: rgba($white, 0.1);
+    border: 2px solid rgba($white, 0.2);
+    color: $white;
+    border-radius: 8px;
+    font-size: 1rem;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+
+    i {
+      font-size: 1.2rem;
+    }
+
+    &:hover {
+      border-color: $main-color;
+      background-color: rgba($main-color, 0.1);
+      transform: translateY(-2px);
+    }
+  }
+
+  @include mobile {
+    flex-direction: column;
+
+    .link-btn {
+      justify-content: center;
+    }
+  }
+}
+

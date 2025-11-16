@@ -1,0 +1,254 @@
+@use "../scss/" as *;
+
+.profile-page {
+  padding: 2rem 0;
+}
+
+.profile-container {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 2rem;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.profile-sidebar {
+  .profile-avatar {
+    background-color: rgba($body-bg, 0.5);
+    border: 2px solid rgba($main-color, 0.3);
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    margin-bottom: 2rem;
+
+    .avatar-circle {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, $main-color, darken($main-color, 20%));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+
+      i {
+        font-size: 5rem;
+        color: $white;
+      }
+    }
+
+    .change-avatar-btn {
+      padding: 0.8rem 1.5rem;
+      background-color: transparent;
+      border: 2px solid $main-color;
+      color: $main-color;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0 auto;
+      transition: all 0.3s ease;
+
+      i {
+        font-size: 1.2rem;
+      }
+
+      &:hover {
+        background-color: $main-color;
+        color: $white;
+      }
+    }
+  }
+
+  .profile-stats {
+    background-color: rgba($body-bg, 0.5);
+    border: 2px solid rgba($white, 0.1);
+    border-radius: 12px;
+    padding: 1.5rem;
+
+    .stat-item {
+      text-align: center;
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba($white, 0.1);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      h3 {
+        font-size: 2rem;
+        color: $main-color;
+        margin-bottom: 0.5rem;
+      }
+
+      p {
+        color: $txt-color;
+        font-size: 0.9rem;
+      }
+    }
+  }
+}
+
+.profile-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.profile-section {
+  background-color: rgba($body-bg, 0.5);
+  border: 2px solid rgba($white, 0.1);
+  border-radius: 12px;
+  padding: 2rem;
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgba($white, 0.1);
+
+    h2 {
+      font-size: 1.5rem;
+      color: $main-color;
+    }
+
+    .edit-btn {
+      padding: 0.6rem 1.2rem;
+      background-color: transparent;
+      border: 2px solid $main-color;
+      color: $main-color;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.3s ease;
+
+      i {
+        font-size: 1.2rem;
+      }
+
+      &:hover {
+        background-color: $main-color;
+        color: $white;
+      }
+    }
+  }
+}
+
+.profile-form {
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+
+    @include mobile {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: $white;
+      font-weight: 500;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      background-color: rgba($black, 0.3);
+      border: 2px solid rgba($white, 0.2);
+      border-radius: 8px;
+      color: $white;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+
+      &:focus {
+        outline: none;
+        border-color: $main-color;
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      &::placeholder {
+        color: $txt-color;
+      }
+    }
+
+    select {
+      cursor: pointer;
+
+      option {
+        background-color: $body-bg;
+        color: $white;
+      }
+    }
+  }
+
+  .save-btn {
+    padding: 1rem 2rem;
+    background-color: $main-color;
+    color: $white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+
+    i {
+      font-size: 1.3rem;
+    }
+
+    &:hover {
+      background-color: darken($main-color, 10%);
+      transform: translateY(-2px);
+    }
+  }
+}
+
+.danger-zone {
+  border-color: rgba(#f44336, 0.3);
+
+  .logout-btn {
+    padding: 1rem 2rem;
+    background-color: transparent;
+    border: 2px solid #f44336;
+    color: #f44336;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+
+    i {
+      font-size: 1.3rem;
+    }
+
+    &:hover {
+      background-color: rgba(#f44336, 0.1);
+    }
+  }
+}
+

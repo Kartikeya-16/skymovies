@@ -1,0 +1,263 @@
+@use "../scss/" as *;
+
+.watch-online-page {
+  background-color: $black;
+  min-height: 100vh;
+}
+
+.video-container {
+  position: relative;
+  width: 100%;
+  background-color: $black;
+  padding-top: 56.25%; // 16:9 aspect ratio
+
+  .back-btn {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    z-index: 100;
+    padding: 0.8rem 1.5rem;
+    background-color: rgba($black, 0.7);
+    border: 2px solid $main-color;
+    color: $white;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+
+    i {
+      font-size: 1.2rem;
+    }
+
+    &:hover {
+      background-color: $main-color;
+    }
+  }
+
+  .video-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    iframe,
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  }
+
+  .movie-info-overlay {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    z-index: 100;
+    background: linear-gradient(135deg, rgba($main-color, 0.8), rgba($black, 0.8));
+    padding: 1.5rem;
+    border-radius: 8px;
+    max-width: 400px;
+
+    h1 {
+      font-size: 1.5rem;
+      color: $white;
+      margin: 0;
+    }
+  }
+}
+
+.video-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba($black, 0.9), transparent);
+  padding: 2rem 2rem 1rem;
+  z-index: 50;
+  transition: opacity 0.3s ease;
+
+  .progress-bar {
+    margin-bottom: 1rem;
+
+    .progress-slider {
+      width: 100%;
+      height: 4px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: rgba($white, 0.3);
+      border-radius: 2px;
+      outline: none;
+      cursor: pointer;
+
+      &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 16px;
+        height: 16px;
+        background: $main-color;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+
+        &:hover {
+          transform: scale(1.2);
+        }
+      }
+
+      &::-moz-range-thumb {
+        width: 16px;
+        height: 16px;
+        background: $main-color;
+        border-radius: 50%;
+        cursor: pointer;
+        border: none;
+      }
+    }
+  }
+
+  .controls-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .left-controls,
+  .right-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .control-btn {
+    background: transparent;
+    border: none;
+    color: $white;
+    font-size: 1.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0.3rem;
+
+    &:hover {
+      color: $main-color;
+      transform: scale(1.1);
+    }
+  }
+
+  .volume-control {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .volume-slider {
+      width: 80px;
+      height: 4px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: rgba($white, 0.3);
+      border-radius: 2px;
+      outline: none;
+      cursor: pointer;
+
+      &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 12px;
+        height: 12px;
+        background: $white;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+
+      &::-moz-range-thumb {
+        width: 12px;
+        height: 12px;
+        background: $white;
+        border-radius: 50%;
+        cursor: pointer;
+        border: none;
+      }
+    }
+  }
+
+  .time-display {
+    color: $white;
+    font-size: 0.9rem;
+    font-family: monospace;
+  }
+}
+
+.video-details {
+  padding: 2rem 0;
+
+  .actions-bar {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    .action-btn {
+      padding: 1rem 2rem;
+      background-color: rgba($white, 0.1);
+      border: 2px solid rgba($white, 0.2);
+      color: $white;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.3s ease;
+
+      i {
+        font-size: 1.3rem;
+      }
+
+      &:hover {
+        border-color: $main-color;
+        background-color: rgba($main-color, 0.1);
+        color: $main-color;
+      }
+    }
+  }
+}
+
+@include mobile {
+  .video-container {
+    .back-btn {
+      top: 1rem;
+      left: 1rem;
+      padding: 0.6rem 1rem;
+      font-size: 0.9rem;
+    }
+
+    .movie-info-overlay {
+      top: 1rem;
+      right: 1rem;
+      padding: 1rem;
+
+      h1 {
+        font-size: 1.2rem;
+      }
+    }
+  }
+
+  .video-controls {
+    padding: 1rem;
+
+    .controls-bottom {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .volume-control {
+      .volume-slider {
+        width: 60px;
+      }
+    }
+  }
+}
+

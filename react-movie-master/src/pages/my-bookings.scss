@@ -1,0 +1,543 @@
+@use "../scss/" as *;
+
+.my-bookings-page {
+  padding: 2rem 0;
+}
+
+.booking-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid rgba($white, 0.1);
+
+  .tab-btn {
+    padding: 1rem 2rem;
+    background-color: transparent;
+    border: none;
+    color: $txt-color;
+    font-size: 1.1rem;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: $main-color;
+      transition: width 0.3s ease;
+    }
+
+    &:hover {
+      color: $main-color;
+    }
+
+    &.active {
+      color: $main-color;
+
+      &::after {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.bookings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.no-bookings {
+  text-align: center;
+  padding: 4rem 2rem;
+  background-color: rgba($body-bg, 0.5);
+  border-radius: 12px;
+
+  i {
+    font-size: 4rem;
+    color: $txt-color;
+    margin-bottom: 1rem;
+  }
+
+  h3 {
+    font-size: 1.8rem;
+    color: $white;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    color: $txt-color;
+  }
+}
+
+.booking-card {
+  background-color: rgba($body-bg, 0.5);
+  border: 2px solid rgba($white, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1.5rem;
+  align-items: center;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: $main-color;
+    transform: translateY(-2px);
+  }
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.booking-status {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-align: center;
+  min-width: 100px;
+
+  &.upcoming {
+    background-color: rgba(76, 175, 80, 0.2);
+    color: #4caf50;
+    border: 2px solid #4caf50;
+  }
+
+  &.completed {
+    background-color: rgba(158, 158, 158, 0.2);
+    color: #9e9e9e;
+    border: 2px solid #9e9e9e;
+  }
+
+  &.cancelled {
+    background-color: rgba(244, 67, 54, 0.2);
+    color: #f44336;
+    border: 2px solid #f44336;
+  }
+}
+
+.booking-info {
+  .movie-title {
+    font-size: 1.5rem;
+    color: $white;
+    margin-bottom: 1rem;
+  }
+
+  .booking-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: $txt-color;
+
+      i {
+        font-size: 1.2rem;
+        color: $main-color;
+      }
+    }
+  }
+
+  .booking-id {
+    color: $txt-color;
+    font-size: 0.9rem;
+    font-family: monospace;
+  }
+}
+
+.booking-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+
+  @include mobile {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .action-btn {
+    padding: 0.8rem 1.5rem;
+    background-color: $main-color;
+    color: $white;
+    border: 2px solid $main-color;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+
+    i {
+      font-size: 1.2rem;
+    }
+
+    &:hover {
+      background-color: darken($main-color, 10%);
+    }
+
+    &.secondary {
+      background-color: transparent;
+      border-color: #f44336;
+      color: #f44336;
+
+      &:hover {
+        background-color: rgba(244, 67, 54, 0.1);
+      }
+    }
+  }
+}
+
+// Modal styles
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1rem;
+  animation: fadeIn 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-content {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border-radius: 20px;
+  padding: 2rem;
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  border: 2px solid rgba($main-color, 0.3);
+  animation: slideUp 0.3s ease;
+  z-index: 10000;
+
+  @include mobile {
+    padding: 1.5rem;
+    max-width: 95%;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: rgba($white, 0.1);
+  border: none;
+  color: $white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10001;
+
+  i {
+    font-size: 1.8rem;
+  }
+
+  &:hover {
+    background-color: $main-color;
+    transform: rotate(90deg);
+  }
+}
+
+// Ticket Modal
+.ticket-modal {
+  max-width: 450px;
+
+  .ticket-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba($main-color, 0.2) 0%, rgba($main-color, 0.05) 100%);
+    border-radius: 12px;
+    border: 1px solid rgba($main-color, 0.3);
+
+    h2 {
+      color: $white;
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
+    }
+
+    .booking-id-modal {
+      color: $main-color;
+      font-family: monospace;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+  }
+
+  .ticket-qr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+    background-color: $white;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+
+    canvas {
+      border-radius: 8px;
+    }
+
+    p {
+      margin-top: 1rem;
+      color: #333;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+  }
+
+  .ticket-details {
+    background-color: rgba($white, 0.05);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+
+    .ticket-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.8rem 0;
+      border-bottom: 1px solid rgba($white, 0.1);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .label {
+        color: $txt-color;
+        font-size: 0.95rem;
+      }
+
+      .value {
+        color: $white;
+        font-weight: 600;
+        text-align: right;
+      }
+    }
+  }
+
+  .ticket-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+
+    button {
+      padding: 1rem;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+
+      i {
+        font-size: 1.2rem;
+      }
+
+      &.btn-primary {
+        background-color: $main-color;
+        color: $white;
+        border-color: $main-color;
+
+        &:hover {
+          background-color: darken($main-color, 10%);
+          transform: translateY(-2px);
+          box-shadow: 0 5px 15px rgba($main-color, 0.4);
+        }
+      }
+
+      &.btn-secondary {
+        background-color: transparent;
+        color: $white;
+        border-color: rgba($white, 0.3);
+
+        &:hover {
+          background-color: rgba($white, 0.1);
+          border-color: $white;
+          transform: translateY(-2px);
+        }
+      }
+    }
+  }
+}
+
+// Cancel Modal
+.cancel-modal {
+  max-width: 450px;
+
+  .cancel-header {
+    text-align: center;
+    margin-bottom: 2rem;
+
+    i {
+      margin-bottom: 1rem;
+      animation: shake 0.5s ease;
+    }
+
+    h2 {
+      color: $white;
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      color: $txt-color;
+      font-size: 1rem;
+    }
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-10deg); }
+    75% { transform: rotate(10deg); }
+  }
+
+  .cancel-details {
+    background-color: rgba($white, 0.05);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+
+    p {
+      margin-bottom: 0.8rem;
+      color: $white;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      strong {
+        color: $main-color;
+        font-size: 1.2rem;
+      }
+    }
+
+    .refund-info {
+      background-color: rgba(#4caf50, 0.1);
+      border: 1px solid #4caf50;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #4caf50;
+      font-size: 0.95rem;
+
+      i {
+        font-size: 1.5rem;
+      }
+    }
+  }
+
+  .cancel-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+
+    button {
+      padding: 1rem;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+
+      &.btn-secondary {
+        background-color: transparent;
+        color: $white;
+        border-color: rgba($white, 0.3);
+
+        &:hover {
+          background-color: rgba($white, 0.1);
+          border-color: $white;
+        }
+      }
+
+      &.btn-danger {
+        background-color: #f44336;
+        color: $white;
+        border-color: #f44336;
+
+        &:hover {
+          background-color: darken(#f44336, 10%);
+          transform: translateY(-2px);
+          box-shadow: 0 5px 15px rgba(#f44336, 0.4);
+        }
+      }
+    }
+  }
+}
+
+// Scrollbar styling for modal
+.modal-content {
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba($white, 0.05);
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba($main-color, 0.5);
+    border-radius: 10px;
+
+    &:hover {
+      background: $main-color;
+    }
+  }
+}

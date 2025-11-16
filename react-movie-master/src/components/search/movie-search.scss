@@ -1,0 +1,271 @@
+@use "../../scss/" as *;
+
+.movie-search {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+
+  .search-form {
+    width: 100%;
+  }
+
+  .search-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background-color: rgba($body-bg, 0.8);
+    border: 2px solid rgba($white, 0.2);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+
+    &:focus-within {
+      border-color: $main-color;
+      box-shadow: 0 0 0 3px rgba($main-color, 0.1);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      font-size: 1.5rem;
+      color: $txt-color;
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 1rem 3rem 1rem 3.5rem;
+      background: transparent;
+      border: none;
+      color: $white;
+      font-size: 1rem;
+      outline: none;
+
+      &::placeholder {
+        color: $txt-color;
+      }
+    }
+
+    .clear-btn {
+      position: absolute;
+      right: 1rem;
+      background: transparent;
+      border: none;
+      color: $txt-color;
+      cursor: pointer;
+      padding: 0.3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+
+      i {
+        font-size: 1.5rem;
+      }
+
+      &:hover {
+        color: $main-color;
+      }
+    }
+  }
+
+  .search-suggestions {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    right: 0;
+    background-color: $body-bg;
+    border: 2px solid rgba($main-color, 0.3);
+    border-radius: 12px;
+    overflow: hidden;
+    z-index: 100;
+    box-shadow: 0 8px 24px rgba($black, 0.5);
+    animation: slideDown 0.3s ease;
+
+    .suggestions-list {
+      max-height: 400px;
+      overflow-y: auto;
+
+      &::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: rgba($white, 0.05);
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: $main-color;
+        border-radius: 4px;
+      }
+    }
+
+    .suggestion-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.5rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border-bottom: 1px solid rgba($white, 0.05);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &:hover {
+        background-color: rgba($main-color, 0.1);
+
+        .bx-right-arrow-alt {
+          transform: translateX(5px);
+          color: $main-color;
+        }
+      }
+
+      > .bx-movie {
+        font-size: 1.8rem;
+        color: $main-color;
+        flex-shrink: 0;
+      }
+
+      .suggestion-info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+
+        .suggestion-title {
+          color: $white;
+          font-weight: 600;
+          font-size: 1rem;
+        }
+
+        .suggestion-meta {
+          color: $txt-color;
+          font-size: 0.85rem;
+        }
+      }
+
+      .bx-right-arrow-alt {
+        font-size: 1.3rem;
+        color: $txt-color;
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+      }
+    }
+
+    .suggestions-footer {
+      padding: 1rem;
+      border-top: 2px solid rgba($white, 0.1);
+      background-color: rgba($body-bg, 0.8);
+
+      .view-all-btn {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        background-color: transparent;
+        border: 2px solid $main-color;
+        color: $main-color;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+
+        i {
+          font-size: 1.2rem;
+          transition: transform 0.3s ease;
+        }
+
+        &:hover {
+          background-color: $main-color;
+          color: $white;
+
+          i {
+            transform: translateX(5px);
+          }
+        }
+      }
+    }
+
+    .no-results {
+      padding: 3rem 2rem;
+      text-align: center;
+
+      i {
+        font-size: 3rem;
+        color: $txt-color;
+        margin-bottom: 1rem;
+      }
+
+      p {
+        color: $txt-color;
+        font-size: 1rem;
+      }
+    }
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@include mobile {
+  .movie-search {
+    max-width: 100%;
+
+    .search-input-wrapper {
+      .search-input {
+        padding: 0.8rem 2.5rem 0.8rem 3rem;
+        font-size: 0.9rem;
+      }
+
+      .search-icon {
+        left: 0.8rem;
+        font-size: 1.3rem;
+      }
+
+      .clear-btn {
+        right: 0.8rem;
+
+        i {
+          font-size: 1.3rem;
+        }
+      }
+    }
+
+    .search-suggestions {
+      .suggestions-list {
+        max-height: 300px;
+      }
+
+      .suggestion-item {
+        padding: 0.8rem 1rem;
+
+        > .bx-movie {
+          font-size: 1.5rem;
+        }
+
+        .suggestion-info {
+          .suggestion-title {
+            font-size: 0.9rem;
+          }
+
+          .suggestion-meta {
+            font-size: 0.8rem;
+          }
+        }
+      }
+    }
+  }
+}
+
