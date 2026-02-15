@@ -1,6 +1,7 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { ClerkProvider } from "@clerk/clerk-react";
+import ErrorBoundary from "./components/error-boundary/ErrorBoundary";
 import App from "./App";
 
 // Get Clerk Publishable Key
@@ -16,8 +17,10 @@ const root = createRoot(container);
 
 root.render(
   <React.StrictMode>
-    <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
-    <App />
-    </ClerkProvider>
+    <ErrorBoundary>
+      <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
+        <App />
+      </ClerkProvider>
+    </ErrorBoundary>
   </React.StrictMode>
 );

@@ -62,6 +62,10 @@ const bookingSchema = new mongoose.Schema({
     enum: ['pending', 'confirmed', 'cancelled', 'expired'],
     default: 'pending'
   },
+  expiresAt: {
+    type: Date,
+    index: true
+  },
   payment: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Payment'
@@ -93,9 +97,12 @@ bookingSchema.pre('save', async function(next) {
 
 // Indexes
 bookingSchema.index({ user: 1, createdAt: -1 });
-bookingSchema.index({ bookingId: 1 });
+bookingSchema.index({ bookingId: 1 }, { unique: true });
 bookingSchema.index({ status: 1 });
 bookingSchema.index({ showDate: 1 });
+bookingSchema.index({ expiresAt: 1 }, { sparse: true });
+bookingSchema.index({ user: 1, status: 1 });
+bookingSchema.index({ showtime: 1, status: 1 });
 
 module.exports = mongoose.model('Booking', bookingSchema);
 

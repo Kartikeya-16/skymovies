@@ -1,0 +1,141 @@
+@use "../../scss/" as *;
+
+.error-boundary {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: $body-bg;
+}
+
+.error-boundary-content {
+  max-width: 600px;
+  text-align: center;
+  
+  .error-icon {
+    font-size: 5rem;
+    color: $main-color;
+    margin-bottom: 1rem;
+    
+    i {
+      animation: pulse 2s infinite;
+    }
+  }
+  
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: $white;
+  }
+  
+  .error-message {
+    font-size: 1.1rem;
+    color: $txt-color;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+  
+  .error-details {
+    background: rgba($white, 0.05);
+    border: 1px solid rgba($white, 0.1);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    text-align: left;
+    
+    summary {
+      cursor: pointer;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: $main-color;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+    
+    pre {
+      font-size: 0.85rem;
+      color: $txt-color;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+  }
+  
+  .error-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    
+    button {
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.3s ease;
+      
+      i {
+        font-size: 1.2rem;
+      }
+      
+      &.btn-primary {
+        background: $main-color;
+        color: $white;
+        
+        &:hover {
+          background: darken($main-color, 10%);
+          transform: translateY(-2px);
+        }
+      }
+      
+      &.btn-secondary {
+        background: rgba($white, 0.1);
+        color: $white;
+        border: 1px solid rgba($white, 0.2);
+        
+        &:hover {
+          background: rgba($white, 0.15);
+          transform: translateY(-2px);
+        }
+      }
+    }
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@include mobile {
+  .error-boundary-content {
+    h1 {
+      font-size: 1.5rem;
+    }
+    
+    .error-icon {
+      font-size: 3.5rem;
+    }
+    
+    .error-actions {
+      flex-direction: column;
+      
+      button {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  }
+}

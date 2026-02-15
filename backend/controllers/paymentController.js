@@ -17,10 +17,15 @@ const razorpay = new Razorpay({
 
 // @desc    Create payment order
 // @route   POST /api/payments/create-order
-// @access  Public (for now, until auth is fully implemented)
+// @access  Private
 exports.createOrder = async (req, res, next) => {
   try {
     const { bookingId, amount, currency, bookingDetails } = req.body;
+
+    // Validate Razorpay credentials
+    if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+      throw new AppError('Payment gateway not configured. Please contact support.', 500);
+    }
 
     // If bookingId is provided, use existing booking flow
     if (bookingId) {
@@ -30,10 +35,10 @@ exports.createOrder = async (req, res, next) => {
         return next(new AppError('Booking not found', 404));
       }
 
-      // Skip auth check for now (will be added later)
-      // if (req.user && booking.user.toString() !== req.user.id) {
-      //   return next(new AppError('Not authorized', 403));
-      // }
+      // Check authorization - user must own the booking
+      if (req.user && booking.user.toString() !== req.user.id) {
+        return next(new AppError('Not authorized to create payment for this booking', 403));
+      }
 
       // Create Razorpay order
       const options = {
@@ -104,7 +109,7 @@ exports.createOrder = async (req, res, next) => {
 
 // @desc    Verify payment
 // @route   POST /api/payments/verify
-// @access  Public (for now, until auth is fully implemented)
+// @access  Private
 exports.verifyPayment = async (req, res, next) => {
   try {
     const {
@@ -113,6 +118,11 @@ exports.verifyPayment = async (req, res, next) => {
       razorpay_signature,
       paymentId
     } = req.body;
+
+    // Validate required fields
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      return next(new AppError('Missing required payment verification fields', 400));
+    }
 
     // Verify signature
     const sign = razorpay_order_id + '|' + razorpay_payment_id;

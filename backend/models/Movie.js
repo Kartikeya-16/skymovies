@@ -121,11 +121,13 @@ const movieSchema = new mongoose.Schema({
 
 // Indexes for better query performance
 movieSchema.index({ title: 'text', overview: 'text' });
-movieSchema.index({ tmdbId: 1 });
+movieSchema.index({ tmdbId: 1 }, { unique: true, sparse: true });
 movieSchema.index({ availableIn: 1 });
 movieSchema.index({ 'theatreRelease.releaseStatus': 1 });
 movieSchema.index({ releaseDate: -1 });
 movieSchema.index({ popularity: -1 });
+movieSchema.index({ isActive: 1 });
+movieSchema.index({ availableIn: 1, isActive: 1 });
 
 module.exports = mongoose.model('Movie', movieSchema);
 

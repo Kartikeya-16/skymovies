@@ -90,6 +90,15 @@
     transform: translateY(-2px);
   }
 
+  &.cancelled-booking {
+    opacity: 0.75;
+    
+    &:hover {
+      border-color: rgba($white, 0.2);
+      transform: translateY(-1px);
+    }
+  }
+
   @include mobile {
     grid-template-columns: 1fr;
   }
@@ -196,6 +205,24 @@
       &:hover {
         background-color: rgba(244, 67, 54, 0.1);
       }
+    }
+  }
+
+  .cancelled-info {
+    padding: 0.8rem 1.5rem;
+    background-color: rgba(#95a5a6, 0.1);
+    border: 2px solid rgba(#95a5a6, 0.3);
+    border-radius: 8px;
+    color: #95a5a6;
+    font-size: 1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+
+    i {
+      font-size: 1.2rem;
     }
   }
 }

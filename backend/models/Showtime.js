@@ -89,6 +89,8 @@ const showtimeSchema = new mongoose.Schema({
 showtimeSchema.index({ movie: 1, theatre: 1, date: 1 });
 showtimeSchema.index({ date: 1, startTime: 1 });
 showtimeSchema.index({ theatre: 1, date: 1 });
+showtimeSchema.index({ isActive: 1 });
+showtimeSchema.index({ date: 1, isActive: 1 });
 
 // Method to check seat availability
 showtimeSchema.methods.isSeatAvailable = function(seatId) {

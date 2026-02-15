@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import tmdbApi, { category, movieType } from "../../api/tmdbApi";
+import tmdbApi, { movieType } from "../../api/tmdbApi";
 import MovieWithOTT from "../movie-with-ott/MovieWithOTT";
 import "./streaming-movies-list.scss";
 

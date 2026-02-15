@@ -75,9 +75,11 @@ paymentSchema.pre('save', async function(next) {
 
 // Indexes
 paymentSchema.index({ user: 1, createdAt: -1 });
-paymentSchema.index({ paymentId: 1 });
+paymentSchema.index({ paymentId: 1 }, { unique: true });
 paymentSchema.index({ status: 1 });
 paymentSchema.index({ providerTransactionId: 1 });
+paymentSchema.index({ providerOrderId: 1 });
+paymentSchema.index({ booking: 1 });
 
 module.exports = mongoose.model('Payment', paymentSchema);
 

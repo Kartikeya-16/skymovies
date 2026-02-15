@@ -6,50 +6,70 @@ import PageHeader from "../components/page-header/PageHeader";
 import "./my-bookings.scss";
 
 const MyBookings = () => {
-  // Mock data - will be fetched from backend later
-  const [bookings, setBookings] = useState([
-    {
-      id: "BK1234567890",
-      movieTitle: "Spider-Man: No Way Home",
-      theatre: "PVR Cinemas",
-      showtime: "07:00 PM",
-      date: "2025-11-10",
-      seats: ["D5", "D6", "D7"],
-      total: 600,
-      status: "upcoming",
-      qrCode: "QR_CODE_DATA",
-    },
-    {
-      id: "BK9876543210",
-      movieTitle: "Dune: Part Two",
-      theatre: "INOX",
-      showtime: "04:00 PM",
-      date: "2025-11-05",
-      seats: ["F3", "F4"],
-      total: 500,
-      status: "completed",
-      qrCode: "QR_CODE_DATA",
-    },
-    {
-      id: "BK1122334455",
-      movieTitle: "Oppenheimer",
-      theatre: "Cinepolis",
-      showtime: "09:00 PM",
-      date: "2025-10-28",
-      seats: ["H5", "H6"],
-      total: 500,
-      status: "completed",
-      qrCode: "QR_CODE_DATA",
-    },
-  ]);
+  // Load bookings from localStorage or use mock data
+  const loadBookings = () => {
+    const savedBookings = localStorage.getItem('userBookings');
+    if (savedBookings) {
+      return JSON.parse(savedBookings);
+    }
+    // Default mock data
+    return [
+      {
+        id: "BK1234567890",
+        movieTitle: "Spider-Man: No Way Home",
+        theatre: "PVR Cinemas",
+        showtime: "07:00 PM",
+        date: "2025-11-10",
+        seats: ["D5", "D6", "D7"],
+        total: 600,
+        status: "upcoming",
+        qrCode: "QR_CODE_DATA",
+      },
+      {
+        id: "BK9876543210",
+        movieTitle: "Dune: Part Two",
+        theatre: "INOX",
+        showtime: "04:00 PM",
+        date: "2025-11-05",
+        seats: ["F3", "F4"],
+        total: 500,
+        status: "completed",
+        qrCode: "QR_CODE_DATA",
+      },
+      {
+        id: "BK1122334455",
+        movieTitle: "Oppenheimer",
+        theatre: "Cinepolis",
+        showtime: "09:00 PM",
+        date: "2025-10-28",
+        seats: ["H5", "H6"],
+        total: 500,
+        status: "completed",
+        qrCode: "QR_CODE_DATA",
+      },
+    ];
+  };
 
+  const [bookings, setBookings] = useState(loadBookings);
   const [activeTab, setActiveTab] = useState("all");
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [showCancelModal, setShowCancelModal] = useState(null);
   const ticketModalRef = useRef(null);
 
+  // Save bookings to localStorage whenever they change
+  React.useEffect(() => {
+    localStorage.setItem('userBookings', JSON.stringify(bookings));
+  }, [bookings]);
+
   const filteredBookings = bookings.filter((booking) => {
     if (activeTab === "all") return true;
+    if (activeTab === "completed") {
+      // Show both completed and cancelled in Past tab
+      return booking.status === "completed" || booking.status === "cancelled";
+    }
+    if (activeTab === "cancelled") {
+      return booking.status === "cancelled";
+    }
     return booking.status === activeTab;
   });
 
@@ -64,12 +84,15 @@ const MyBookings = () => {
   const confirmCancelBooking = () => {
     if (showCancelModal) {
       // Update booking status to cancelled
-      setBookings(bookings.map(b => 
+      const updatedBookings = bookings.map(b => 
         b.id === showCancelModal.id 
-          ? { ...b, status: 'cancelled' } 
+          ? { ...b, status: 'cancelled', cancelledAt: new Date().toISOString() } 
           : b
-      ));
+      );
+      setBookings(updatedBookings);
       setShowCancelModal(null);
+      
+      // Show success message
       alert('Booking cancelled successfully! Refund will be processed in 5-7 business days.');
     }
   };
@@ -417,6 +440,29 @@ const MyBookings = () => {
 
       <div className="container">
         <div className="my-bookings-page">
+          {/* Reset Demo Data Button (for testing) */}
+          {process.env.NODE_ENV === 'development' && (
+            <div style={{ marginBottom: '1rem', textAlign: 'right' }}>
+              <button 
+                onClick={() => {
+                  localStorage.removeItem('userBookings');
+                  window.location.reload();
+                }}
+                style={{
+                  padding: '0.5rem 1rem',
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  borderRadius: '8px',
+                  color: 'white',
+                  cursor: 'pointer',
+                  fontSize: '0.85rem'
+                }}
+              >
+                <i className="bx bx-refresh"></i> Reset Demo Data
+              </button>
+            </div>
+          )}
+
           <div className="booking-tabs">
             <button
               className={`tab-btn ${activeTab === "all" ? "active" : ""}`}
@@ -436,6 +482,12 @@ const MyBookings = () => {
             >
               Past
             </button>
+            <button
+              className={`tab-btn ${activeTab === "cancelled" ? "active" : ""}`}
+              onClick={() => setActiveTab("cancelled")}
+            >
+              Cancelled
+            </button>
           </div>
 
           <div className="bookings-list">
@@ -447,9 +499,11 @@ const MyBookings = () => {
               </div>
             ) : (
               filteredBookings.map((booking) => (
-                <div key={booking.id} className="booking-card">
+                <div key={booking.id} className={`booking-card ${booking.status === 'cancelled' ? 'cancelled-booking' : ''}`}>
                   <div className={`booking-status ${booking.status}`}>
-                    {booking.status === "upcoming" ? "Upcoming" : "Completed"}
+                    {booking.status === "upcoming" && "Upcoming"}
+                    {booking.status === "completed" && "Completed"}
+                    {booking.status === "cancelled" && "Cancelled"}
                   </div>
 
                   <div className="booking-info">
@@ -499,6 +553,12 @@ const MyBookings = () => {
                         <i className="bx bx-download"></i>
                         Download Invoice
                       </button>
+                    )}
+                    {booking.status === "cancelled" && (
+                      <div className="cancelled-info">
+                        <i className="bx bx-info-circle"></i>
+                        <span>Refund processed</span>
+                      </div>
                     )}
                   </div>
                 </div>

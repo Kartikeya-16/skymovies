@@ -1,14 +1,15 @@
 import axios from 'axios';
 
-// Backend API base URL
-const API_URL = 'http://localhost:5001/api';
+// Backend API base URL - use environment variable
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001/api';
 
 // Create axios instance for backend
 const backendClient = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json'
-  }
+  },
+  timeout: 30000, // 30 second timeout
 });
 
 // Add token to requests if available
@@ -29,14 +30,60 @@ backendClient.interceptors.request.use(
 backendClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      // Token expired or invalid
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      // Optionally redirect to login
-      // window.location.href = '/login';
+    // Network error
+    if (!error.response) {
+      console.error('Network Error:', error.message);
+      return Promise.reject({
+        message: 'Network error. Please check your internet connection.',
+        type: 'network',
+        originalError: error
+      });
     }
-    return Promise.reject(error);
+
+    // Handle specific status codes
+    const { status, data } = error.response;
+    
+    switch (status) {
+      case 401:
+        // Token expired or invalid
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        console.error('Authentication failed. Please login again.');
+        // Optionally redirect to login
+        if (window.location.pathname !== '/') {
+          window.location.href = '/';
+        }
+        break;
+        
+      case 403:
+        console.error('Access forbidden:', data?.message);
+        break;
+        
+      case 404:
+        console.error('Resource not found:', data?.message);
+        break;
+        
+      case 429:
+        console.error('Too many requests. Please try again later.');
+        break;
+        
+      case 500:
+      case 502:
+      case 503:
+        console.error('Server error. Please try again later.');
+        break;
+        
+      default:
+        console.error('API Error:', data?.message || error.message);
+    }
+    
+    return Promise.reject({
+      message: data?.message || 'An error occurred',
+      status,
+      errors: data?.errors,
+      type: 'api',
+      originalError: error
+    });
   }
 );
 

@@ -3,33 +3,69 @@ const Showtime = require('../models/Showtime');
 const Payment = require('../models/Payment');
 const { AppError } = require('../middleware/errorHandler');
 const qrCodeGenerator = require('../utils/qrCodeGenerator');
+const mongoose = require('mongoose');
 
 // @desc    Create booking
 // @route   POST /api/bookings
 // @access  Private
 exports.createBooking = async (req, res, next) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+  
   try {
     const { showtimeId, seats } = req.body;
 
-    // Get showtime
+    // Validate input
+    if (!seats || seats.length === 0) {
+      await session.abortTransaction();
+      return next(new AppError('Please select at least one seat', 400));
+    }
+
+    if (seats.length > 10) {
+      await session.abortTransaction();
+      return next(new AppError('Maximum 10 seats can be booked at once', 400));
+    }
+
+    // Get showtime with lock
     const showtime = await Showtime.findById(showtimeId)
-      .populate('movie theatre');
+      .populate('movie theatre')
+      .session(session);
 
     if (!showtime) {
+      await session.abortTransaction();
       return next(new AppError('Showtime not found', 404));
     }
 
-    // Check seat availability
-    for (const seat of seats) {
-      if (!showtime.isSeatAvailable(seat.seatId)) {
-        return next(new AppError(`Seat ${seat.seatId} is not available`, 400));
-      }
+    // Check if showtime is in the past
+    const showtimeDate = new Date(showtime.date);
+    const [hours, minutes] = showtime.startTime.split(':');
+    showtimeDate.setHours(parseInt(hours), parseInt(minutes));
+    
+    if (showtimeDate < new Date()) {
+      await session.abortTransaction();
+      return next(new AppError('Cannot book seats for past showtimes', 400));
+    }
+
+    // Check seat availability atomically
+    const requestedSeatIds = seats.map(s => s.seatId);
+    const bookedSeatIds = showtime.seats.booked
+      .filter(s => s.status !== 'available')
+      .map(s => s.seatId);
+    
+    const unavailableSeats = requestedSeatIds.filter(id => bookedSeatIds.includes(id));
+    
+    if (unavailableSeats.length > 0) {
+      await session.abortTransaction();
+      return next(new AppError(`Seats ${unavailableSeats.join(', ')} are not available`, 400));
     }
 
     // Calculate total amount
     let totalAmount = 0;
     const bookedSeats = seats.map(seat => {
       const price = showtime.calculatePrice(seat.category);
+      if (!price) {
+        throw new AppError(`Invalid seat category: ${seat.category}`, 400);
+      }
       totalAmount += price;
       return {
         seatId: seat.seatId,
@@ -39,7 +75,7 @@ exports.createBooking = async (req, res, next) => {
     });
 
     // Create booking
-    const booking = await Booking.create({
+    const booking = await Booking.create([{
       user: req.user.id,
       movie: showtime.movie._id,
       showtime: showtimeId,
@@ -48,45 +84,34 @@ exports.createBooking = async (req, res, next) => {
       totalAmount,
       showDate: showtime.date,
       showTime: showtime.startTime,
-      status: 'pending'
-    });
+      status: 'pending',
+      expiresAt: new Date(Date.now() + 15 * 60 * 1000) // 15 minutes
+    }], { session });
 
-    // Block seats temporarily (15 minutes)
+    // Block seats atomically
     for (const seat of bookedSeats) {
       showtime.seats.booked.push({
         seatId: seat.seatId,
-        bookingId: booking._id,
-        status: 'blocked'
+        bookingId: booking[0]._id,
+        status: 'blocked',
+        blockedAt: new Date()
       });
     }
     showtime.seats.available -= bookedSeats.length;
-    await showtime.save();
+    await showtime.save({ session });
 
-    // Set timeout to release seats if not paid
-    setTimeout(async () => {
-      const checkBooking = await Booking.findById(booking._id);
-      if (checkBooking.status === 'pending') {
-        checkBooking.status = 'expired';
-        await checkBooking.save();
-        
-        // Release seats
-        const releaseShowtime = await Showtime.findById(showtimeId);
-        bookedSeats.forEach(seat => {
-          releaseShowtime.seats.booked = releaseShowtime.seats.booked.filter(
-            s => s.bookingId.toString() !== booking._id.toString()
-          );
-        });
-        releaseShowtime.seats.available += bookedSeats.length;
-        await releaseShowtime.save();
-      }
-    }, 15 * 60 * 1000); // 15 minutes
+    // Commit transaction
+    await session.commitTransaction();
 
     res.status(201).json({
       status: 'success',
-      data: { booking }
+      data: { booking: booking[0] }
     });
   } catch (error) {
+    await session.abortTransaction();
     next(error);
+  } finally {
+    session.endSession();
   }
 };
 
@@ -95,21 +120,40 @@ exports.createBooking = async (req, res, next) => {
 // @access  Private
 exports.getUserBookings = async (req, res, next) => {
   try {
-    const { status } = req.query;
+    const { status, page = 1, limit = 10 } = req.query;
 
     const query = { user: req.user.id };
     if (status) {
       query.status = status;
     }
 
+    // Calculate pagination
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    // Get bookings with pagination and field selection
     const bookings = await Booking.find(query)
-      .populate('movie', 'title posterPath')
-      .populate('theatre', 'name location')
-      .sort({ createdAt: -1 });
+      .select('bookingId seats totalAmount showDate showTime status qrCode createdAt')
+      .populate('movie', 'title posterPath tmdbId')
+      .populate('theatre', 'name location.city location.area')
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(parseInt(limit))
+      .lean(); // Use lean() for better performance
+
+    // Get total count for pagination
+    const total = await Booking.countDocuments(query);
 
     res.status(200).json({
       status: 'success',
-      data: { bookings }
+      data: { 
+        bookings,
+        pagination: {
+          page: parseInt(page),
+          limit: parseInt(limit),
+          total,
+          pages: Math.ceil(total / parseInt(limit))
+        }
+      }
     });
   } catch (error) {
     next(error);

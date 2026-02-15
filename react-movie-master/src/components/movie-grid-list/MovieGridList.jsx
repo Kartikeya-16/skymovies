@@ -145,7 +145,7 @@ const MovieGridList = (props) => {
     };
 
     getInitialMovies();
-  }, [fetchMoviesFromAPI]);
+  }, [fetchMoviesFromAPI, props.filterByReleaseDate]);
 
   const handleLoadMore = async () => {
     if (loadingMore || !hasMorePages) return;

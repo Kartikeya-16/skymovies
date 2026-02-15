@@ -82,8 +82,7 @@ const Payment = () => {
             setIsProcessing(false);
             
             // Redirect to confirmation page
-            navigate({
-              pathname: "/booking-confirmation",
+            navigate("/booking-confirmation", {
               state: {
                 ...bookingDetails,
                 ...formData,

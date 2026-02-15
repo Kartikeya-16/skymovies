@@ -161,8 +161,7 @@ const TheatreSelection = () => {
     }
 
     // Navigate to seat selection with all details
-    navigate({
-      pathname: "/seat-selection",
+    navigate("/seat-selection", {
       state: {
         ...movieDetails,
         city: selectedCity,
@@ -171,6 +170,7 @@ const TheatreSelection = () => {
         theatreAddress: selectedTheatre.address,
         date: dates.find(d => d.full === selectedDate)?.display || selectedDate,
         showtime: selectedShowtime,
+        movieTitle: movieDetails.title || "Movie Title",
       }
     });
   };

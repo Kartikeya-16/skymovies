@@ -12,13 +12,32 @@ const BookingConfirmation = () => {
   const bookingDetails = location.state || {};
   const ticketRef = useRef(null);
 
+  // Debug: Log booking details
+  console.log("Booking Details:", bookingDetails);
+
+  // Provide default values if data is missing
+  const displayData = {
+    bookingId: bookingDetails.bookingId || "N/A",
+    paymentId: bookingDetails.paymentId || "N/A",
+    movieTitle: bookingDetails.movieTitle || "Movie Title",
+    theatre: bookingDetails.theatre || "Theatre Name",
+    seats: bookingDetails.seats || [],
+    showtime: bookingDetails.showtime || "N/A",
+    date: bookingDetails.date || new Date().toLocaleDateString(),
+    total: bookingDetails.total || 0,
+    paymentMethod: bookingDetails.paymentMethod || "online",
+    name: bookingDetails.name || "",
+    email: bookingDetails.email || "",
+    phone: bookingDetails.phone || "",
+  };
+
   // Generate QR code data
   const qrCodeData = JSON.stringify({
-    bookingId: bookingDetails.bookingId,
-    paymentId: bookingDetails.paymentId,
-    seats: bookingDetails.seats,
-    showtime: bookingDetails.showtime,
-    total: bookingDetails.total,
+    bookingId: displayData.bookingId,
+    paymentId: displayData.paymentId,
+    seats: displayData.seats,
+    showtime: displayData.showtime,
+    total: displayData.total,
   });
 
   // Download ticket as PDF with professional format
@@ -32,7 +51,6 @@ const BookingConfirmation = () => {
 
       // Colors
       const primaryColor = [220, 38, 38]; // Red
-      const darkColor = [15, 15, 15];
       const lightGray = [200, 200, 200];
       const textColor = [50, 50, 50];
 
@@ -56,7 +74,7 @@ const BookingConfirmation = () => {
       pdf.setFontSize(18);
       pdf.setFont("helvetica", "bold");
       pdf.setTextColor(...textColor);
-      pdf.text(bookingDetails.movieTitle || "Movie", 20, yPos);
+      pdf.text(displayData.movieTitle, 20, yPos);
       yPos += 10;
 
       // Booking Details Box
@@ -81,14 +99,14 @@ const BookingConfirmation = () => {
       // Right Column - Values
       pdf.setFont("helvetica", "bold");
       pdf.setTextColor(...textColor);
-      pdf.text(bookingDetails.bookingId || "N/A", 70, yPos + 5);
-      pdf.text(bookingDetails.paymentId || "N/A", 70, yPos + 12);
-      pdf.text(bookingDetails.date || new Date().toLocaleDateString(), 70, yPos + 19);
-      pdf.text(bookingDetails.showtime || "N/A", 70, yPos + 26);
-      pdf.text(bookingDetails.theatre || "Theatre", 70, yPos + 33);
-      pdf.text(bookingDetails.seats?.join(", ") || "N/A", 70, yPos + 40);
-      pdf.text((bookingDetails.seats?.length || 0).toString(), 70, yPos + 47);
-      pdf.text((bookingDetails.paymentMethod || "Online").toUpperCase(), 70, yPos + 54);
+      pdf.text(displayData.bookingId, 70, yPos + 5);
+      pdf.text(displayData.paymentId, 70, yPos + 12);
+      pdf.text(displayData.date, 70, yPos + 19);
+      pdf.text(displayData.showtime, 70, yPos + 26);
+      pdf.text(displayData.theatre, 70, yPos + 33);
+      pdf.text(displayData.seats.join(", ") || "N/A", 70, yPos + 40);
+      pdf.text(displayData.seats.length.toString(), 70, yPos + 47);
+      pdf.text(displayData.paymentMethod.toUpperCase(), 70, yPos + 54);
 
       yPos += 90;
 
@@ -129,7 +147,7 @@ const BookingConfirmation = () => {
       
       pdf.setFontSize(18);
       pdf.setTextColor(...primaryColor);
-      pdf.text(`₹${bookingDetails.total || "0"}`, 180, yPos + 12, { align: "right" });
+      pdf.text(`₹${displayData.total}`, 180, yPos + 12, { align: "right" });
 
       // Footer
       yPos = 270;
@@ -143,7 +161,7 @@ const BookingConfirmation = () => {
       pdf.text("For support, contact: support@skymovies.com", 105, yPos + 15, { align: "center" });
 
       // Save PDF
-      pdf.save(`SkyMovies-Ticket-${bookingDetails.bookingId || Date.now()}.pdf`);
+      pdf.save(`SkyMovies-Ticket-${displayData.bookingId}.pdf`);
     } catch (error) {
       console.error("Error generating PDF:", error);
       alert("Failed to download ticket. Please try again.");
@@ -152,7 +170,7 @@ const BookingConfirmation = () => {
 
   // Share ticket details
   const handleShare = async () => {
-    const shareText = `🎬 Movie Ticket Booked!\n\nBooking ID: ${bookingDetails.bookingId}\nMovie: ${bookingDetails.movieTitle || 'Movie'}\nTheatre: ${bookingDetails.theatre || 'Theatre'}\nSeats: ${bookingDetails.seats?.join(", ")}\nShowtime: ${bookingDetails.showtime}\nTotal: ₹${bookingDetails.total}`;
+    const shareText = `🎬 Movie Ticket Booked!\n\nBooking ID: ${displayData.bookingId}\nMovie: ${displayData.movieTitle}\nTheatre: ${displayData.theatre}\nSeats: ${displayData.seats.join(", ")}\nShowtime: ${displayData.showtime}\nTotal: ₹${displayData.total}`;
 
     try {
       // Check if Web Share API is available and if we can share
@@ -234,31 +252,31 @@ const BookingConfirmation = () => {
               <div className="detail-group">
                 <div className="detail-item">
                   <span className="label">Booking ID:</span>
-                  <span className="value">{bookingDetails.bookingId}</span>
+                  <span className="value">{displayData.bookingId}</span>
                 </div>
                 <div className="detail-item">
                   <span className="label">Payment ID:</span>
-                  <span className="value">{bookingDetails.paymentId}</span>
+                  <span className="value">{displayData.paymentId}</span>
                 </div>
                 <div className="detail-item">
                   <span className="label">Seats:</span>
-                  <span className="value">{bookingDetails.seats?.join(", ")}</span>
+                  <span className="value">{displayData.seats.join(", ") || "N/A"}</span>
                 </div>
                 <div className="detail-item">
                   <span className="label">Showtime:</span>
-                  <span className="value">{bookingDetails.showtime}</span>
+                  <span className="value">{displayData.showtime}</span>
                 </div>
                 <div className="detail-item">
                   <span className="label">Number of Tickets:</span>
-                  <span className="value">{bookingDetails.seats?.length}</span>
+                  <span className="value">{displayData.seats.length}</span>
                 </div>
                 <div className="detail-item">
                   <span className="label">Payment Method:</span>
-                  <span className="value">{bookingDetails.paymentMethod?.toUpperCase()}</span>
+                  <span className="value">{displayData.paymentMethod.toUpperCase()}</span>
                 </div>
                 <div className="detail-item total">
                   <span className="label">Total Paid:</span>
-                  <span className="value">₹{bookingDetails.total}</span>
+                  <span className="value">₹{displayData.total}</span>
                 </div>
               </div>
             </div>

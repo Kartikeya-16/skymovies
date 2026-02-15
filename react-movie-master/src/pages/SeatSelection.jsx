@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import PageHeader from "../components/page-header/PageHeader";
 import "./seat-selection.scss";
 
 const SeatSelection = () => {
-  const { movieId, theatreId, showtime } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const bookingData = location.state || {};
+  
   const [selectedSeats, setSelectedSeats] = useState([]);
 
   // Mock seat layout - will be dynamic later
@@ -46,14 +48,15 @@ const SeatSelection = () => {
 
   const proceedToPayment = () => {
     if (selectedSeats.length > 0) {
-      navigate({
-        pathname: "/payment",
+      navigate("/payment", {
         state: {
-          movieId,
-          theatreId,
-          showtime,
+          ...bookingData,
           seats: selectedSeats,
           total: calculateTotal(),
+          movieTitle: bookingData.movieTitle || bookingData.title || "Movie Title",
+          theatre: bookingData.theatre || "Theatre Name",
+          showtime: bookingData.showtime || "N/A",
+          date: bookingData.date || new Date().toLocaleDateString(),
         },
       });
     }
@@ -65,6 +68,14 @@ const SeatSelection = () => {
 
       <div className="container">
         <div className="seat-selection-page">
+          {/* Booking Info Banner */}
+          {bookingData.movieTitle && (
+            <div className="booking-info-banner">
+              <h3>{bookingData.movieTitle}</h3>
+              <p>{bookingData.theatre} • {bookingData.date} • {bookingData.showtime}</p>
+            </div>
+          )}
+
           <div className="screen">
             <div className="screen-label">SCREEN</div>
           </div>

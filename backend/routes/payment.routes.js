@@ -1,5 +1,6 @@
 const express = require('express');
 const { protect, authorize } = require('../middleware/auth');
+const { paymentValidation } = require('../middleware/requestValidator');
 const {
   createOrder,
   verifyPayment,
@@ -11,18 +12,17 @@ const {
 
 const router = express.Router();
 
-// Public routes (no auth required for now)
-router.post('/create-order', createOrder);
-router.post('/verify', verifyPayment);
+// Protected routes - require authentication
+router.use(protect);
 
-// Protected routes (will be enabled when auth is implemented)
-// router.use(protect);
-router.get('/user/history', protect, getPaymentHistory);
-router.get('/:id', protect, getPaymentById);
-router.get('/:id/invoice', protect, getInvoice);
+router.post('/create-order', paymentValidation.createOrder, createOrder);
+router.post('/verify', paymentValidation.verify, verifyPayment);
+router.get('/user/history', getPaymentHistory);
+router.get('/:id', getPaymentById);
+router.get('/:id/invoice', getInvoice);
 
 // Admin route
-router.post('/:id/refund', protect, authorize('admin'), processRefund);
+router.post('/:id/refund', authorize('admin'), processRefund);
 
 module.exports = router;
 
