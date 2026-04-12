@@ -17,7 +17,7 @@ const razorpay = new Razorpay({
 
 // @desc    Create payment order
 // @route   POST /api/payments/create-order
-// @access  Private
+// @access  Public (no auth required)
 exports.createOrder = async (req, res, next) => {
   try {
     const { bookingId, amount, currency, bookingDetails } = req.body;
@@ -35,7 +35,7 @@ exports.createOrder = async (req, res, next) => {
         return next(new AppError('Booking not found', 404));
       }
 
-      // Check authorization - user must own the booking
+      // Check authorization - user must own the booking (only if user is authenticated)
       if (req.user && booking.user.toString() !== req.user.id) {
         return next(new AppError('Not authorized to create payment for this booking', 403));
       }
@@ -109,7 +109,7 @@ exports.createOrder = async (req, res, next) => {
 
 // @desc    Verify payment
 // @route   POST /api/payments/verify
-// @access  Private
+// @access  Public (no auth required)
 exports.verifyPayment = async (req, res, next) => {
   try {
     const {

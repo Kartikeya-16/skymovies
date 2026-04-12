@@ -29,7 +29,11 @@ const Payment = () => {
     setIsProcessing(true);
 
     try {
+      console.log('💳 Starting payment process...');
+      console.log('📦 Booking details:', bookingDetails);
+      
       // Step 1: Create order on backend (backend will call Razorpay API)
+      console.log('📡 Calling backend to create order...');
       const orderResponse = await backendApi.payments.createOrder({
         amount: bookingDetails.total,
         currency: 'INR',
@@ -40,6 +44,8 @@ const Payment = () => {
           showtime: bookingDetails.showtime,
         },
       });
+
+      console.log('✅ Order created successfully:', orderResponse);
 
       // Step 2: Extract order data from backend response
       // Backend returns: { status: 'success', data: { order: {...}, key: '...' } }
@@ -66,12 +72,15 @@ const Payment = () => {
         showtime: bookingDetails.showtime,
       };
 
+      console.log('🚀 Initiating Razorpay payment...');
+      
       // Step 3: Initiate Razorpay payment with real order ID
       await initiateRazorpayPayment(
         orderData,
         razorpayBookingDetails,
         // Success callback
         async (paymentResponse) => {
+          console.log('✅ Payment successful:', paymentResponse);
           // Step 4: Verify payment on backend
           try {
             await backendApi.payments.verifyPayment({
@@ -93,24 +102,38 @@ const Payment = () => {
               },
             });
           } catch (verifyError) {
+            console.error('❌ Payment verification failed:', verifyError);
             setIsProcessing(false);
             alert('Payment verification failed. Please contact support with your payment ID: ' + paymentResponse.razorpay_payment_id);
           }
         },
         // Failure callback
         (error) => {
+          console.error('❌ Payment failed:', error);
           setIsProcessing(false);
           alert('Payment failed: ' + error);
         }
       );
     } catch (error) {
+      console.error('❌ Error in payment process:', error);
       setIsProcessing(false);
       
+      // Detailed error logging
+      if (error.response) {
+        console.error('Response error:', {
+          status: error.response.status,
+          data: error.response.data,
+          headers: error.response.headers
+        });
+      }
+      
       // Check if backend is not running
-      if (error.message.includes('Network Error') || error.code === 'ECONNREFUSED') {
-        alert('Cannot connect to server. Please try again later.');
+      if (error.message && (error.message.includes('Network Error') || error.message.includes('Network error'))) {
+        alert('Cannot connect to server. Please ensure the backend is running on http://localhost:5001');
+      } else if (error.status === 401 || error.message?.includes('Not authorized')) {
+        alert('Authentication error: ' + (error.message || 'Please make sure you are logged in'));
       } else {
-        alert('Error initiating payment: ' + (error.response?.data?.message || error.message));
+        alert('Error initiating payment: ' + (error.response?.data?.message || error.message || 'Unknown error'));
       }
     }
   };

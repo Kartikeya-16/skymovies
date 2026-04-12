@@ -2,6 +2,12 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
+  clerkId: {
+    type: String,
+    unique: true,
+    sparse: true, // Allows null values while maintaining uniqueness for non-null values
+    index: true
+  },
   name: {
     type: String,
     required: [true, 'Please provide a name'],
@@ -18,7 +24,10 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: [true, 'Please provide a password'],
+    required: function() {
+      // Password is required only if clerkId is not present (custom auth)
+      return !this.clerkId;
+    },
     minlength: [6, 'Password must be at least 6 characters'],
     select: false
   },
@@ -92,7 +101,8 @@ const userSchema = new mongoose.Schema({
 
 // Hash password before saving
 userSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) {
+  // Skip password hashing if using Clerk authentication
+  if (this.clerkId || !this.isModified('password')) {
     return next();
   }
   

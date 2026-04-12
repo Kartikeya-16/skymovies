@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes as RouterRoutes } from "react-router-dom";
+import { Route, Routes as RouterRoutes, Navigate } from "react-router-dom";
 
 import Home from "../pages/Home";
 import Catalog from "../pages/Catalog";
@@ -21,12 +21,19 @@ import About from "../pages/About";
 import Contact from "../pages/Contact";
 import Terms from "../pages/Terms";
 import Privacy from "../pages/Privacy";
+import DebugAuth from "../pages/DebugAuth";
 
 import * as Config from "../constants/Config";
 
 const Routes = () => {
   return (
     <RouterRoutes>
+      {/* Root redirect */}
+      <Route path="/" element={<Navigate to={`/${Config.HOME_PAGE}`} replace />} />
+      
+      {/* Debug Route */}
+      <Route path="/debug-auth" element={<DebugAuth />} />
+      
       {/* New Routes for Booking System */}
       <Route path="/theatre-movies" element={<TheatreMovies />} />
       <Route path="/online-movies" element={<OnlineMovies />} />

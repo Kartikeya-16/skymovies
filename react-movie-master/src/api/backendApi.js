@@ -12,16 +12,50 @@ const backendClient = axios.create({
   timeout: 30000, // 30 second timeout
 });
 
+// Store Clerk's getToken function (will be set by App.js)
+let clerkGetToken = null;
+
+export const setClerkTokenGetter = (getTokenFn) => {
+  clerkGetToken = getTokenFn;
+  console.log('✅ Clerk token getter configured');
+};
+
 // Add token to requests if available
 backendClient.interceptors.request.use(
-  (config) => {
+  async (config) => {
+    console.log('🔐 Interceptor: Preparing request to', config.url);
+    
+    // Try to get Clerk token first
+    if (clerkGetToken) {
+      try {
+        console.log('🔑 Attempting to get Clerk token...');
+        const token = await clerkGetToken({ template: 'default' });
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+          console.log('✅ Clerk token added to request');
+          return config;
+        } else {
+          console.warn('⚠️ Clerk token is null or undefined');
+        }
+      } catch (error) {
+        console.error('❌ Error getting Clerk token:', error);
+      }
+    } else {
+      console.warn('⚠️ Clerk token getter not configured');
+    }
+    
+    // Fallback to localStorage token (for custom JWT auth)
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+      console.log('✅ localStorage token added to request');
+    } else {
+      console.warn('⚠️ No token found in localStorage either');
     }
     return config;
   },
   (error) => {
+    console.error('❌ Request interceptor error:', error);
     return Promise.reject(error);
   }
 );
@@ -159,7 +193,7 @@ const backendApi = {
     verifyPayment: (paymentData) => backendClient.post('/payments/verify', paymentData),
     
     // Get payment history
-    getHistory: () => backendClient.get('/payments/history')
+    getHistory: () => backendClient.get('/payments/user/history')
   },
 
   // ============ USER ============
